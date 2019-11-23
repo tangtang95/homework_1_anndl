@@ -39,7 +39,7 @@ def retrain_with_callbacks(model_dir, train_dataset, train_gen, valid_dataset, v
 
 
 
-def train_with_callbacks(cwd, train_dataset, train_gen, valid_dataset, valid_gen, model, model_name):
+def set_callbacks(cwd, model, model_name):
     ########## Callbacks ##########
     exps_dir = os.path.join(cwd, 'classification_experiments')
     if not os.path.exists(exps_dir):
@@ -52,13 +52,6 @@ def train_with_callbacks(cwd, train_dataset, train_gen, valid_dataset, valid_gen
         os.makedirs(exp_dir)
 
     callbacks = []
-
-
-    # Write model summary on file
-    model_summary_file = os.path.join(exp_dir, "model_summary.txt")
-    f = open(model_summary_file, "w")
-    f.write(str(model.summary()))
-    f.close()
 
     # Model checkpoint
     ckpt_dir = os.path.join(exp_dir, 'ckpts')
@@ -78,12 +71,4 @@ def train_with_callbacks(cwd, train_dataset, train_gen, valid_dataset, valid_gen
                                                  profile_batch=0,
                                                  histogram_freq=1)  # if 1 shows weights histograms
     callbacks.append(tb_callback)
-
-    ########## Fitting ##########
-    model.fit(x=train_dataset,
-              epochs=70,
-              steps_per_epoch=len(train_gen),
-              validation_data=valid_dataset,
-              validation_steps=len(valid_gen),
-              callbacks=callbacks)
-
+    return callbacks

@@ -1,9 +1,6 @@
 import os
-import tensorflow as tf
-import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from os.path import dirname
-from src.utils.settings import *
+from ..utils.settings import *
 
 
 def read_test_data(root_path, bs, img_h, img_w):
@@ -34,7 +31,6 @@ def read_test_data(root_path, bs, img_h, img_w):
 
 def read_training_data(root_path, train_data_gen=None, bs=32, img_h=256, img_w=256, to_rescale=True):
     SEED = get_seed()
-    tf.random.set_seed(SEED)
 
     # Define some variables
     num_classes = 20
@@ -116,7 +112,6 @@ def read_training_data(root_path, train_data_gen=None, bs=32, img_h=256, img_w=2
 
 def read_training_data_unscaled(root_path, train_data_gen=None, bs=32):
     SEED = get_seed()
-    tf.random.set_seed(SEED)
 
     # Define some variables
     num_classes = 20

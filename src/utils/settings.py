@@ -1,7 +1,8 @@
 import tensorflow as tf
 
 #SEED = 1234
-SEED = 262453 # FROM GAPBN ON
+#SEED = 262453 # FROM GAPBN ON
+SEED = 482910# FOR BEST MODEL
 
 def set_seed():
     # Set the seed for random operations.

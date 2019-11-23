@@ -1,7 +1,3 @@
-import os
-import tensorflow as tf
-from datetime import datetime
-from src.utils.settings import *
 from src.data_management.data_reader import *
 from src.training.training_with_callbacks import *
 
@@ -61,5 +57,12 @@ if __name__ == '__main__':
 
     # Model training
     exp_dir = os.path.join(root_path, "report")
-    train_with_callbacks(exp_dir, train_dataset, train_gen, valid_dataset, valid_gen, model, model_name)
+    callbacks = set_callbacks(exp_dir, model, model_name)
+
+    model.fit(x=train_dataset,
+              epochs=70,
+              steps_per_epoch=len(train_gen),
+              validation_data=valid_dataset,
+              validation_steps=len(valid_gen),
+              callbacks=callbacks)
 

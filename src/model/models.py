@@ -1,5 +1,5 @@
 import tensorflow as tf
-from src.utils.settings import get_seed
+from ..utils.settings import get_seed
 import numpy as np
 
 class GAPBN():
@@ -277,18 +277,20 @@ class INC2(object):
 
 
 class INCRES():
-    def get_model(self, seed, img_w=256, img_h=256, num_classes=20):
+    def get_model(self, seed, img_w=256, img_h=256, num_classes=20, batch_size=32):
+        model = tf.keras.Sequential()
         inception_resnet = tf.keras.applications.InceptionResNetV2(include_top=False, weights='imagenet',
                                                                    input_shape=(img_h, img_w, 3))
         inception_resnet.trainable = False
 
 
-        model = tf.keras.Sequential()
         model.add(inception_resnet)
         model.add(tf.keras.layers.GlobalAveragePooling2D())
         model.add(tf.keras.layers.Dense(units=256, activation='relu'))
         model.add(tf.keras.layers.Dropout(rate=0.5, seed=seed))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
+
+        model.build(input_shape=(batch_size, img_h, img_w, 3))
 
         loss = tf.keras.losses.CategoricalCrossentropy()
         optimizer = tf.keras.optimizers.Adam()
