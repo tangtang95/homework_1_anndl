@@ -1,14 +1,11 @@
 import tensorflow as tf
-from ..utils.settings import get_seed
 import numpy as np
 
 class GAPBN():
     def __init__(self):
         self.model_name = "GAPBN"
 
-    def get_model(self, bs=32, img_w=410, img_h=410, num_classes=20):
-        SEED=get_seed()
-
+    def get_model(self, seed, bs=32, img_w=410, img_h=410, num_classes=20):
         model = tf.keras.models.Sequential()
         total_depth = 6
 
@@ -32,13 +29,13 @@ class GAPBN():
         model.add(tf.keras.layers.Dense(units=256, use_bias=False))
         model.add(tf.keras.layers.BatchNormalization())
         model.add(tf.keras.layers.Activation("relu"))
-        model.add(tf.keras.layers.Dropout(rate=0.5, seed=SEED))
+        model.add(tf.keras.layers.Dropout(rate=0.5, seed=seed))
 
         # Second FC layer
         model.add(tf.keras.layers.Dense(units=128, use_bias=False))
         model.add(tf.keras.layers.BatchNormalization())
         model.add(tf.keras.layers.Activation("relu"))
-        model.add(tf.keras.layers.Dropout(rate=0.5, seed=SEED))
+        model.add(tf.keras.layers.Dropout(rate=0.5, seed=seed))
 
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
@@ -53,9 +50,7 @@ class GAP2():
     def __init__(self):
         self.model_name = "GAP2"
 
-    def get_model(self, bs = 32, img_w=440, img_h=440, num_classes=20):
-        model_name = "GAP2"
-        SEED = 262453
+    def get_model(self, seed = 262453, bs=32, img_w=440, img_h=440, num_classes=20):
         model = tf.keras.models.Sequential()
         total_depth = 6
 
@@ -71,9 +66,9 @@ class GAP2():
 
         model.add(tf.keras.layers.GlobalAveragePooling2D(data_format='channels_last'))
         model.add(tf.keras.layers.Dense(units=256, activation="relu"))
-        model.add(tf.keras.layers.Dropout(rate=0.1, seed=SEED))
+        model.add(tf.keras.layers.Dropout(rate=0.1, seed=seed))
         model.add(tf.keras.layers.Dense(units=128, activation="relu"))
-        model.add(tf.keras.layers.Dropout(rate=0.05, seed=SEED))
+        model.add(tf.keras.layers.Dropout(rate=0.05, seed=seed))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
         model.build(input_shape=(bs, img_w, img_h, 3))
@@ -90,7 +85,7 @@ class CNN1():
     def __init__(self):
         self.model_nome = "CNN1"
 
-    def get_model(self, num_classes, bs, img_w, img_h, seed):
+    def get_model(self, seed, num_classes, bs, img_w, img_h):
         model = tf.keras.models.Sequential()
 
         model.add(tf.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', input_shape=(img_w, img_h, 3),
@@ -205,7 +200,7 @@ class RCN1(object):
         model = tf.keras.Sequential()
         model.add(resnet)
         model.add(tf.keras.layers.Dense(units=256, activation='elu'))
-        model.add(tf.keras.layers.Dropout(rate=0.5))
+        model.add(tf.keras.layers.Dropout(rate=0.5, seed=seed))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
         loss = tf.keras.losses.CategoricalCrossentropy()
@@ -218,10 +213,6 @@ class RCN1(object):
 class INC1(object):
 
     def get_model(self, seed, img_w=256, img_h=256, num_classes=20):
-        bs = 32
-        img_h = 256
-        img_w = 256
-
         # Model Creation
         inception = tf.keras.applications.inception_v3.InceptionV3(include_top=False,
                                                                    weights='imagenet',
@@ -234,7 +225,7 @@ class INC1(object):
         model = tf.keras.Sequential()
         model.add(inception)
         model.add(tf.keras.layers.Dense(units=256, activation='elu'))
-        model.add(tf.keras.layers.Dropout(rate=0.5))
+        model.add(tf.keras.layers.Dropout(rate=0.5, seed=seed))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
         loss = tf.keras.losses.CategoricalCrossentropy()
@@ -249,10 +240,6 @@ class INC1(object):
 class INC2(object):
 
     def get_model(self, seed, img_w=256, img_h=256, num_classes=20):
-        bs = 32
-        img_h = 256
-        img_w = 256
-
         # Model Creation
         inception = tf.keras.applications.inception_v3.InceptionV3(include_top=False,
                                                                    weights='imagenet',
@@ -265,7 +252,7 @@ class INC2(object):
         model = tf.keras.Sequential()
         model.add(inception)
         model.add(tf.keras.layers.Dense(units=512, activation='elu'))
-        model.add(tf.keras.layers.Dropout(rate=0.4))
+        model.add(tf.keras.layers.Dropout(rate=0.4, seed=seed))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
         loss = tf.keras.losses.CategoricalCrossentropy()

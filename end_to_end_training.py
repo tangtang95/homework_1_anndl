@@ -2,7 +2,7 @@ from src.data_management.data_reader import *
 from src.training.training_with_callbacks import *
 
 if __name__ == '__main__':
-    SEED = 262453
+    SEED = 262453 # Need old_dataset_split.json
     tf.random.set_seed(SEED)
     cwd = os.getcwd()
     root_path = os.path.join(cwd, "..")
@@ -12,7 +12,8 @@ if __name__ == '__main__':
     bs=32
     img_h = 410
     img_w = 410
-    train_dataset, valid_dataset, train_gen, valid_gen = read_training_data(root_path, bs=bs, img_w=img_w, img_h=img_h)
+    train_dataset, valid_dataset, train_gen, valid_gen = read_training_data(root_path, SEED, bs=bs, img_h=img_h,
+                                                                            img_w=img_w)
 
     # Model Creation
     model_name = "GAPBN"

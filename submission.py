@@ -19,7 +19,7 @@ if __name__ == '__main__':
     bs=32
     img_h = 256
     img_w = 256
-    test_dataset, test_gen = read_test_data(root_path, bs=bs, img_h=img_h, img_w=img_w)
+    test_dataset, test_gen = read_test_data(root_path, SEED, bs=bs, img_h=img_h, img_w=img_w)
 
     # RSN1 INIT
     model_name = "RSN1"
