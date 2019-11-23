@@ -1,9 +1,10 @@
 from src.data_management.data_reader import *
 from src.training.training_with_callbacks import *
-from src.model.models import INCRES
+from src.model.models import INCRES, CNN1
 
 if __name__ == '__main__':
-    tf.random.set_seed(get_seed())
+    seed_management()
+
     root_path = os.getcwd()
     num_classes = 20
 
@@ -15,19 +16,46 @@ if __name__ == '__main__':
                                                                             img_w=img_w, to_rescale=True)
 
     # Model Creation
-    model_name = "INCRES"
+    model_name = "TMP"
     model = INCRES()
-    model = model.get_model(img_w, img_h, num_classes=20, batch_size=bs)
-    model.summary()
+    model = model.get_model(img_w=img_w, img_h=img_h)
 
     # Model training
     exp_dir = os.path.join(root_path, "report")
     callbacks = set_callbacks(exp_dir, model, model_name)
+
+
+    use_class_weights = True
+    if use_class_weights:
+        class_w = {0: 1.,
+                   1: 1.,
+                   2: 1.,
+                   3: 1.,
+                   4: 1.,
+                   5: 1.,
+                   6: 1.,
+                   7: 1.,
+                   8: 1.,
+                   9: 1.,
+                   10 : 1.,
+                   11: 1.,
+                   12: 1.,
+                   13: 1.,
+                   14: 1.,
+                   15: 1.,
+                   16: 1.,
+                   17: 1.,
+                   18: 1.,
+                   19: 1.
+                   }
+    else:
+        class_w = None
 
     model.fit(x=train_dataset,
               epochs=70,
               steps_per_epoch=len(train_gen),
               validation_data=valid_dataset,
               validation_steps=len(valid_gen),
-              callbacks=callbacks)
+              callbacks=callbacks,
+              class_weight=class_w)
 

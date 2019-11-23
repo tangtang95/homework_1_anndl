@@ -102,9 +102,9 @@ class CNN1():
 
         model.add(tf.keras.layers.Flatten())
         model.add(tf.keras.layers.Dense(units=256, activation='relu'))
-        model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
+        #model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=128, activation='relu'))
-        model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
+        #model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
         model.build(input_shape=(bs, img_w, img_h, 3))
