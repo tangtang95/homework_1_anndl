@@ -1,7 +1,7 @@
-import os
-import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from src.utils.utils_functions import *
+import tensorflow as tf
+import os
 
 
 def read_test_data(root_path, bs, img_h, img_w):
