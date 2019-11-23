@@ -187,6 +187,29 @@ class EnsembleBestPrediction(object):
 
         return y_pred
 
+class RESNET(object):
+
+    def __init__(self, model_name):
+        self.model_name = model_name
+
+    def get_model(self, seed, num_classes=20, bs=32, img_h=256, img_w=256):
+        model_name = "RESNET"
+        resnet = tf.keras.applications.ResNet50(include_top=False, weights='imagenet', input_shape=(img_w, img_h, 3),
+                                                pooling='avg')
+        resnet.trainable = False
+        model = tf.keras.Sequential()
+        model.add(resnet)
+        model.add(tf.keras.layers.Dense(units=256, activation='relu'))
+        model.add(tf.keras.layers.Dropout(rate=0.5, seed=seed))
+        model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
+
+        loss = tf.keras.losses.CategoricalCrossentropy()
+        optimizer = tf.keras.optimizers.Adam()
+        metrics = ['accuracy']
+        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+
+        return model
+
 class RCN1(object):
 
     def __init__(self, model_name):
