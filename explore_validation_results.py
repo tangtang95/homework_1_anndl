@@ -5,8 +5,7 @@ from sklearn.metrics import classification_report
 import numpy as np
 
 if __name__ == '__main__':
-    # Reading the data
-    seed_management()
+    tf.random.set_seed(get_seed())
     root_path = cwd = os.getcwd()
     bs=32
     img_h = 256
@@ -44,3 +43,4 @@ if __name__ == '__main__':
     y_valid = np.argmax(y_valid, axis=1)
 
     print(classification_report(y_valid, y_pred))
+

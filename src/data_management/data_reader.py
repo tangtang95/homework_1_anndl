@@ -9,6 +9,8 @@ def read_test_data(root_path, bs, img_h, img_w):
 
     data_dir = os.path.join(root_path, "data", "Classification_Dataset")
 
+    print(data_dir)
+
     test_gen = test_data_gen.flow_from_directory(directory=data_dir,
                                                  classes=['test'],
                                                  target_size=(img_w, img_h),

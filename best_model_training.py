@@ -5,7 +5,6 @@ import tensorflow as tf
 
 if __name__ == '__main__':
     tf.random.set_seed(get_seed())
-
     root_path = os.getcwd()
     num_classes = 20
 

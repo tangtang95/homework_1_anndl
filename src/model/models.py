@@ -1,5 +1,6 @@
 from src.utils.utils_functions import *
 import tensorflow as tf
+import numpy as np
 
 class GAPBN():
     def get_model(self, bs=32, img_w=410, img_h=410, num_classes=20):
