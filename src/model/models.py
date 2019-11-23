@@ -1,18 +1,13 @@
-import tensorflow as tf
-import numpy as np
 from src.utils.utils_functions import *
 
 
 class GAPBN():
-    def __init__(self):
-        self.model_name = "GAPBN"
-
     def get_model(self, bs=32, img_w=410, img_h=410, num_classes=20):
-        model = tf.keras.models.Sequential()
+        model = tf.keras.models.Sequential(name="GAPBN")
         total_depth = 6
 
         # Feature extraction
-        model.add(tf.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', input_shape=(img_w, img_h, 3),
+        model.add(tf.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', input_shape=(img_h, img_w, 3),
                                          use_bias=False))
         model.add(tf.keras.layers.BatchNormalization())
         model.add(tf.keras.layers.Activation('relu'))
@@ -41,22 +36,18 @@ class GAPBN():
 
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
-        model.build(input_shape=(bs, img_w, img_h, 3))
-        optimizer = tf.keras.optimizers.Adam()
-        model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
+        model.build(input_shape=(bs, img_h, img_w, 3))
+        _compile_model(model)
 
         return model
 
 
-class GAP2():
-    def __init__(self):
-        self.model_name = "GAP2"
-
+class GAP2(object):
     def get_model(self, bs=32, img_w=440, img_h=440, num_classes=20):
-        model = tf.keras.models.Sequential()
+        model = tf.keras.models.Sequential(name="GAP2")
         total_depth = 6
 
-        model.add(tf.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', input_shape=(img_w, img_h, 3),
+        model.add(tf.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', input_shape=(img_h, img_w, 3),
                                          activation='relu'))
         model.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
 
@@ -73,25 +64,17 @@ class GAP2():
         model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
-        model.build(input_shape=(bs, img_w, img_h, 3))
-        optimizer = tf.keras.optimizers.Adam()
-        model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
-
-        model.build(input_shape=(bs, img_w, img_h, 3))
-        optimizer = tf.keras.optimizers.Adam()
-        model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
+        model.build(input_shape=(bs, img_h, img_w, 3))
+        _compile_model(model)
 
         return model
 
 
-class CNN1():
-    def __init__(self):
-        self.model_nome = "CNN1"
+class CNN1(object):
+    def get_model(self, bs, img_w, img_h, num_classes):
+        model = tf.keras.models.Sequential(name="CNN1")
 
-    def get_model(self, num_classes, bs, img_w, img_h):
-        model = tf.keras.models.Sequential()
-
-        model.add(tf.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', input_shape=(img_w, img_h, 3),
+        model.add(tf.keras.layers.Conv2D(filters=16, kernel_size=(3, 3), padding='same', input_shape=(img_h, img_h, 3),
                                          activation='relu'))
         model.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
 
@@ -102,28 +85,21 @@ class CNN1():
 
         model.add(tf.keras.layers.Flatten())
         model.add(tf.keras.layers.Dense(units=256, activation='relu'))
-        #model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
+        model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=128, activation='relu'))
-        #model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
+        model.add(tf.keras.layers.Dropout(rate=0.05, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
-        model.build(input_shape=(bs, img_w, img_h, 3))
-        model.summary()
+        model.build(input_shape=(bs, img_h, img_w, 3))
 
-        # Model compile
-        optimizer = tf.keras.optimizers.Adam()
-        model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
+        _compile_model(model)
 
         return model
 
 
-class FCNN1():
-
-    def __init__(self):
-        self.model_name = "FCNN2"
-
-    def get_model(self, num_classes, bs, img_w, img_h):
-        model = tf.keras.models.Sequential()
+class FCNN1(object):
+    def get_model(self, bs, img_w, img_h, num_classes):
+        model = tf.keras.models.Sequential(name="FCNN1")
         depth_max_pool = 4
         total_depth = 8
 
@@ -141,8 +117,7 @@ class FCNN1():
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
         model.build(input_shape=(bs, img_w, img_h, 3))
-        optimizer = tf.keras.optimizers.Adadelta()
-        model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
+        _compile_model(model)
 
         return model
 
@@ -193,34 +168,42 @@ class EnsembleBestPrediction(object):
         return y_pred
 
 
-class RCN1(object):
-
-    def __init__(self, model_name):
-        self.model_name = model_name
-
-    def get_model(self, num_classes=20, bs=32, img_h=256, img_w=256):
-        model_name = "RSN1"
+class RSN1(object):
+    def get_model(self, bs=32, img_w=256, img_h=256, num_classes=20):
+        model = tf.keras.Sequential(name="RSN1")
         resnet = tf.keras.applications.resnet_v2.ResNet50V2(include_top=False, weights='imagenet', input_tensor=None,
                                                             input_shape=(img_w, img_h, 3), pooling='avg', classes=1000)
         resnet.trainable = False
-        model = tf.keras.Sequential()
+
         model.add(resnet)
         model.add(tf.keras.layers.Dense(units=256, activation='elu'))
         model.add(tf.keras.layers.Dropout(rate=0.5, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
-        loss = tf.keras.losses.CategoricalCrossentropy()
-        optimizer = tf.keras.optimizers.Adam()
-        metrics = ['accuracy']
-        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        _compile_model(model)
+
+        return model
+
+class RSN2(object):
+
+    def get_model(self, bs=32, img_w=256, img_h=256, num_classes=20):
+        model = tf.keras.Sequential(name="RSN2")
+        resnet = tf.keras.applications.ResNet50(include_top=False, weights='imagenet', input_shape=(img_w, img_h, 3),
+                                                pooling='avg')
+        resnet.trainable = False
+        model.add(resnet)
+        model.add(tf.keras.layers.Dense(units=256, activation='relu'))
+        model.add(tf.keras.layers.Dropout(rate=0.5, seed=get_seed()))
+        model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
+
+        _compile_model()
 
         return model
 
 
 class INC1(object):
-
     def get_model(self, img_w=256, img_h=256, num_classes=20):
-        # Model Creation
+        model = tf.keras.Sequential(name="INC1")
         inception = tf.keras.applications.inception_v3.InceptionV3(include_top=False,
                                                                    weights='imagenet',
                                                                    input_tensor=None,
@@ -229,24 +212,19 @@ class INC1(object):
                                                                    classes=1000)
 
         inception.trainable = False
-        model = tf.keras.Sequential()
         model.add(inception)
         model.add(tf.keras.layers.Dense(units=256, activation='elu'))
         model.add(tf.keras.layers.Dropout(rate=0.5, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
-        loss = tf.keras.losses.CategoricalCrossentropy()
-        optimizer = tf.keras.optimizers.Adam()
-        metrics = ['accuracy']
-        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        _compile_model(model)
 
         return model
 
 
 class INC2(object):
-
     def get_model(self, img_w=256, img_h=256, num_classes=20):
-        # Model Creation
+        model = tf.keras.Sequential(name="INC2")
         inception = tf.keras.applications.inception_v3.InceptionV3(include_top=False,
                                                                    weights='imagenet',
                                                                    input_tensor=None,
@@ -255,23 +233,19 @@ class INC2(object):
                                                                    classes=1000)
 
         inception.trainable = False
-        model = tf.keras.Sequential()
         model.add(inception)
         model.add(tf.keras.layers.Dense(units=512, activation='elu'))
         model.add(tf.keras.layers.Dropout(rate=0.4, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
-        loss = tf.keras.losses.CategoricalCrossentropy()
-        optimizer = tf.keras.optimizers.Adam()
-        metrics = ['accuracy']
-        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        _compile_model(model)
 
         return model
 
 
-class INCRES():
-    def get_model(self, img_w=256, img_h=256, num_classes=20, batch_size=32):
-        model = tf.keras.Sequential()
+class INCRES(object):
+    def get_model(self, bs=32, img_w=256, img_h=256, num_classes=20):
+        model = tf.keras.Sequential(name="INCRES")
         inception_resnet = tf.keras.applications.InceptionResNetV2(include_top=False, weights='imagenet',
                                                                    input_shape=(img_h, img_w, 3), )
         inception_resnet.trainable = False
@@ -282,11 +256,15 @@ class INCRES():
         model.add(tf.keras.layers.Dropout(rate=0.5, seed=get_seed()))
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
-        model.build(input_shape=(batch_size, img_h, img_w, 3))
+        model.build(input_shape=(bs, img_h, img_w, 3))
 
-        loss = tf.keras.losses.CategoricalCrossentropy()
-        optimizer = tf.keras.optimizers.Adam()
-        metrics = ['accuracy']
-        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        _compile_model(model)
 
         return model
+
+def _compile_model(model):
+    loss = tf.keras.losses.CategoricalCrossentropy()
+    optimizer = tf.keras.optimizers.Adam()
+    metrics = ['accuracy']
+    model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+

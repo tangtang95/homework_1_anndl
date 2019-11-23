@@ -1,9 +1,10 @@
 from src.training.training_with_callbacks import *
 import tensorflow as tf
 
+from src.utils.utils_functions import get_seed
+
 if __name__ == '__main__':
-    SEED = 482910
-    tf.random.set_seed(SEED)
+    tf.random.set_seed(get_seed())
     cwd = os.getcwd()
 
     classes = [
@@ -63,14 +64,14 @@ if __name__ == '__main__':
                                                    classes=classes,
                                                    batch_size=batch_size,
                                                    shuffle=True,
-                                                   seed=SEED)
+                                                   seed=get_seed())
 
     valid_gen = valid_data_gen.flow_from_directory(directory=valid_dir,
                                                    target_size=(img_w, img_h),
                                                    classes=classes,
                                                    batch_size=batch_size,
                                                    shuffle=False,
-                                                   seed=SEED)
+                                                   seed=get_seed())
 
     # Dataset creation
     train_dataset = tf.data.Dataset.from_generator(lambda: train_gen, output_types=(tf.float32, tf.float32),
@@ -92,7 +93,7 @@ if __name__ == '__main__':
     model.add(inception_resnet)
     model.add(tf.keras.layers.GlobalAveragePooling2D())
     model.add(tf.keras.layers.Dense(units=256, activation='relu'))
-    model.add(tf.keras.layers.Dropout(rate=0.5, seed=SEED))
+    model.add(tf.keras.layers.Dropout(rate=0.5, seed=get_seed()))
     model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
     model.build(input_shape=(batch_size, img_h, img_w, 3))

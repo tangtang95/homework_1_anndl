@@ -58,4 +58,3 @@ if __name__ == '__main__':
               validation_steps=len(valid_gen),
               callbacks=callbacks,
               class_weight=class_w)
-

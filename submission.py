@@ -1,16 +1,10 @@
-import os
-import tensorflow as tf
-from datetime import datetime
-from src.utils.settings import *
 from src.data_management.data_reader import *
-from src.training.training_with_callbacks import *
 from src.submission.submission_helper import *
 from src.model.models import *
 
 if __name__ == '__main__':
     # Initial settings: https://github.com/keras-team/keras/issues/1920
-    SEED = get_seed()
-    tf.random.set_seed(SEED)
+    tf.random.set_seed(get_seed())
     cwd = os.getcwd()
     root_path = os.path.join(cwd, "..")
     num_classes = 20
@@ -19,7 +13,7 @@ if __name__ == '__main__':
     bs=32
     img_h = 256
     img_w = 256
-    test_dataset, test_gen = read_test_data(root_path, SEED, bs=bs, img_h=img_h, img_w=img_w)
+    test_dataset, test_gen = read_test_data(root_path, bs=bs, img_h=img_h, img_w=img_w)
 
     # RSN1 INIT
     model_name = "RSN1"

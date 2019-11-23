@@ -16,7 +16,7 @@ if __name__ == '__main__':
                                                                             img_w=img_w)
 
     model = INCRES()
-    model = model.get_model(batch_size=bs, img_w=img_w, img_h=img_h)
+    model = model.get_model(bs=bs, img_w=img_w, img_h=img_h)
 
     model.load_weights(os.path.join(root_path, 'report', 'classification_experiments', 'INCRES_Nov23_14-08-54',
                                     'ckpts','cp_07.ckpt'))  # use this if you want to restore saved training
