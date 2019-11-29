@@ -4,18 +4,24 @@ import tensorflow as tf
 import os
 
 
-def read_test_data(root_path, bs, img_h, img_w):
-    test_data_gen = ImageDataGenerator(rescale=1. / 255, fill_mode='constant', cval=0)
+def read_test_data(root_path, batch_size, img_h, img_w):
+    """
+    Read test image data rescaled by 1/255 and resized to (img_h, img_w) with a certain batch size
 
+    :param root_path: the path of the project root path
+    :param batch_size: batch size of images taken from directory
+    :param img_h: target resized image height
+    :param img_w: target resized image width
+    :return: dataset and generator of test images
+    """
     data_dir = os.path.join(root_path, "data", "Classification_Dataset")
 
-    print(data_dir)
-
+    test_data_gen = ImageDataGenerator(rescale=1. / 255, fill_mode='constant', cval=0)
     test_gen = test_data_gen.flow_from_directory(directory=data_dir,
                                                  classes=['test'],
                                                  target_size=(img_w, img_h),
                                                  shuffle=False,
-                                                 batch_size=bs,
+                                                 batch_size=batch_size,
                                                  seed=get_seed()
                                                  )
 
@@ -26,16 +32,22 @@ def read_test_data(root_path, bs, img_h, img_w):
     return test_dataset, test_gen
 
 
-def read_training_data(root_path, bs=32, img_h=256, img_w=256, to_rescale=True):
-    # Define some variables
+def read_training_data(root_path, batch_size=32, img_h=256, img_w=256, to_rescale=True):
+    """
+    Read training and validation image data resized to (img_h, img_w) with a certain batch size
+
+    :param root_path: the path of the project root path
+    :param batch_size: batch size of images taken from directory
+    :param img_h: target resized image height
+    :param img_w: target resized image width
+    :param to_rescale: rescale images by 1/255 if True, otherwise no rescaling at all
+    :return: dataset and generator of training and validation images
+    """
     classes = get_class_list()
     num_classes = len(classes)
+    rescale_factor = 1. / 255 if to_rescale else None
 
-    if to_rescale:
-        rescale_factor = 1. / 255
-    else:
-        rescale_factor = None
-
+    # Define ImageDataGenerator for training and validation data
     train_data_gen = ImageDataGenerator(rotation_range=20,
                                         width_shift_range=1. / 20,
                                         height_shift_range=1. / 20,
@@ -50,23 +62,23 @@ def read_training_data(root_path, bs=32, img_h=256, img_w=256, to_rescale=True):
                                         fill_mode='constant',
                                         cval=0)
 
+    # Generator creation
     data_dir = os.path.join(root_path, "data", "split")
 
-    # Generator creation
     training_dir = os.path.join(data_dir, "training")
     valid_dir = os.path.join(data_dir, "validation")
 
     train_gen = train_data_gen.flow_from_directory(directory=training_dir,
                                                    target_size=(img_w, img_h),
                                                    classes=classes,
-                                                   batch_size=bs,
+                                                   batch_size=batch_size,
                                                    shuffle=True,
                                                    seed=get_seed())
 
     valid_gen = valid_data_gen.flow_from_directory(directory=valid_dir,
                                                    target_size=(img_w, img_h),
                                                    classes=classes,
-                                                   batch_size=bs,
+                                                   batch_size=batch_size,
                                                    shuffle=False,
                                                    seed=get_seed())
 

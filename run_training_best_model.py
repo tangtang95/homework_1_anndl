@@ -1,11 +1,10 @@
 from src.data_management.data_reader import *
 from src.training.training_with_callbacks import *
-from src.model.models import INCRES
+from src.model.models import INCRES, CNN1
 import tensorflow as tf
 
 if __name__ == '__main__':
     tf.random.set_seed(get_seed())
-
     root_path = os.getcwd()
     num_classes = 20
 

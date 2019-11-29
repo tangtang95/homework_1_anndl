@@ -2,8 +2,12 @@ import os
 from datetime import datetime
 import tensorflow as tf
 
-def retrain_with_callbacks(model_dir, train_dataset, train_gen, valid_dataset, valid_gen, model, model_name, n_epochs, last_epoch_num):
-    ########## Callbacks ##########
+def retrain_with_callbacks(model_dir, train_dataset, train_gen, valid_dataset, valid_gen, model,
+                           n_epochs, last_epoch_num):
+    """
+    Re-fit the model by setting callbacks and run the fit
+    """
+    # Set callbacks for retraining
     exp_dir = os.path.join(model_dir, 'retrain', str(last_epoch_num))
 
     if not os.path.exists(exp_dir):
@@ -29,7 +33,7 @@ def retrain_with_callbacks(model_dir, train_dataset, train_gen, valid_dataset, v
                                                  histogram_freq=1)  # if 1 shows weights histograms
     callbacks.append(tb_callback)
 
-    ########## Fitting ##########
+    # Continue the fit of the model
     model.fit(x=train_dataset,
               epochs=n_epochs,
               steps_per_epoch=len(train_gen),
@@ -39,9 +43,15 @@ def retrain_with_callbacks(model_dir, train_dataset, train_gen, valid_dataset, v
 
 
 
-def set_callbacks(cwd, model, model_name):
-    ########## Callbacks ##########
-    exps_dir = os.path.join(cwd, 'classification_experiments')
+def get_callbacks(directory, model_name):
+    """
+    Return the general callbacks to be applied during the fitting of the model
+
+    :param directory: root directory in which to save the experiments (checkpoints, logs, ...)
+    :param model_name: name of the model for differentiating the experiments
+    :return: callbacks to be used during the fit of the model
+    """
+    exps_dir = os.path.join(directory, 'classification_experiments')
     if not os.path.exists(exps_dir):
         os.makedirs(exps_dir)
 

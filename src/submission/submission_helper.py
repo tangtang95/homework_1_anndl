@@ -15,11 +15,14 @@ def create_csv(results, results_dir='./'):
 
 
 def predict_submissions(model, test_dataset, test_gen, result_dir="./", ):
+    """
+    Given a model, test dataset and test generator, it save a csv file containing the predictions of the model for the
+    Kaggle competition
+    """
     predictions = model.predict(x=test_dataset, steps=len(test_gen), verbose=1)
     predicted_class = np.argmax(predictions, axis=1)
 
     image_names = [filename.split('\\')[-1] for filename in test_gen.filenames]
-
 
     results = dict(zip(image_names, predicted_class))
     print(results)

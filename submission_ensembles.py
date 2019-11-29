@@ -8,22 +8,22 @@ if __name__ == '__main__':
     num_classes = 20
 
     # Reading the data
-    bs=32
+    bs = 32
     img_h = 256
     img_w = 256
-    test_dataset, test_gen = read_test_data(cwd, bs=bs, img_h=img_h, img_w=img_w)
+    test_dataset, test_gen = read_test_data(cwd, batch_size=bs, img_h=img_h, img_w=img_w)
 
     # RSN1 INIT
     rsn = RSN1()
     rsn = rsn.get_model()
     rsn.load_weights(os.path.join(cwd, 'report', 'classification_experiments', 'RSN1_Nov21_22-59-47',
-                                    'ckpts', 'cp_08.ckpt'))
+                                  'ckpts', 'cp_08.ckpt'))
 
     # INC1 INIT
     inc1 = INC1()
     inc1 = inc1.get_model()
     inc1.load_weights(os.path.join(cwd, 'report', 'classification_experiments', 'INC_Nov22_17-28-11',
-                                    'ckpts', 'cp_07.ckpt'))
+                                   'ckpts', 'cp_07.ckpt'))
 
     # INC2 INIT
     inc2 = INC2()
@@ -31,8 +31,7 @@ if __name__ == '__main__':
     inc2.load_weights(os.path.join(cwd, 'report', 'classification_experiments', 'INC2_Nov22_18-56-41',
                                    'ckpts', 'cp_07.ckpt'))
 
-
-    # ENSAMBLE INIT
+    # ENSEMBLE INIT
     model_list = []
     model_list.append(rsn)
     model_list.append(inc1)

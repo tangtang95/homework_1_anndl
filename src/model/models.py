@@ -3,7 +3,10 @@ import tensorflow as tf
 import numpy as np
 
 class GAPBN():
-    def get_model(self, bs=32, img_w=410, img_h=410, num_classes=20):
+    """
+    End-to-end training CNN with Batch Normalization and GAP in order to regularize the network
+    """
+    def get_model(self, batch_size=32, img_w=410, img_h=410, num_classes=20):
         model = tf.keras.models.Sequential(name="GAPBN")
         total_depth = 6
 
@@ -37,13 +40,16 @@ class GAPBN():
 
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
-        model.build(input_shape=(bs, img_h, img_w, 3))
+        model.build(input_shape=(batch_size, img_h, img_w, 3))
         _compile_model(model)
 
         return model
 
 
 class GAP2(object):
+    """
+    End-to-end training CNN with GAP and dropout
+    """
     def get_model(self, bs=32, img_w=440, img_h=440, num_classes=20):
         model = tf.keras.models.Sequential(name="GAP2")
         total_depth = 6
@@ -72,6 +78,9 @@ class GAP2(object):
 
 
 class CNN1(object):
+    """
+    First end-to-end training very similar to the Lab notebook lesson
+    """
     def get_model(self, bs, img_w, img_h, num_classes):
         model = tf.keras.models.Sequential(name="CNN1")
 
@@ -99,6 +108,9 @@ class CNN1(object):
 
 
 class FCNN1(object):
+    """
+    End-to-end training CNN with a layer of dense directly softmax
+    """
     def get_model(self, bs, img_w, img_h, num_classes):
         model = tf.keras.models.Sequential(name="FCNN1")
         depth_max_pool = 4
@@ -114,7 +126,6 @@ class FCNN1(object):
                 model.add(tf.keras.layers.MaxPool2D(pool_size=(2, 2)))
 
         model.add(tf.keras.layers.GlobalAveragePooling2D())
-        model.add(tf.keras.layers.Flatten())
         model.add(tf.keras.layers.Dense(units=num_classes, activation='softmax'))
 
         model.build(input_shape=(bs, img_w, img_h, 3))
@@ -124,6 +135,9 @@ class FCNN1(object):
 
 
 class NetworkAverageEnsemble(object):
+    """
+    Ensemble network with the average between the predictions
+    """
     def __init__(self, model_list, num_items_to_predict):
         self.model_list = model_list
         self.num_models = len(model_list)
@@ -143,6 +157,9 @@ class NetworkAverageEnsemble(object):
 
 
 class EnsembleBestPrediction(object):
+    """
+    Ensemble by taking the best probability prediction
+    """
     def __init__(self, model_list, num_items_to_predict):
         self.model_list = model_list
         self.num_models = len(model_list)
@@ -170,6 +187,9 @@ class EnsembleBestPrediction(object):
 
 
 class RSN1(object):
+    """
+    Transfer Learning network with ResNet50V2
+    """
     def get_model(self, bs=32, img_w=256, img_h=256, num_classes=20):
         model = tf.keras.Sequential(name="RSN1")
         resnet = tf.keras.applications.resnet_v2.ResNet50V2(include_top=False, weights='imagenet', input_tensor=None,
@@ -186,7 +206,9 @@ class RSN1(object):
         return model
 
 class RSN2(object):
-
+    """
+    Transfer learning network with ResNet50
+    """
     def get_model(self, bs=32, img_w=256, img_h=256, num_classes=20):
         model = tf.keras.Sequential(name="RSN2")
         resnet = tf.keras.applications.ResNet50(include_top=False, weights='imagenet', input_shape=(img_w, img_h, 3),
@@ -203,6 +225,9 @@ class RSN2(object):
 
 
 class INC1(object):
+    """
+    Transfer learning network with InceptionV3
+    """
     def get_model(self, img_w=256, img_h=256, num_classes=20):
         model = tf.keras.Sequential(name="INC1")
         inception = tf.keras.applications.inception_v3.InceptionV3(include_top=False,
@@ -224,6 +249,9 @@ class INC1(object):
 
 
 class INC2(object):
+    """
+    Transfer learning network with InceptionV3 but with more neurons on FC part
+    """
     def get_model(self, img_w=256, img_h=256, num_classes=20):
         model = tf.keras.Sequential(name="INC2")
         inception = tf.keras.applications.inception_v3.InceptionV3(include_top=False,
@@ -245,6 +273,9 @@ class INC2(object):
 
 
 class INCRES(object):
+    """
+    Transfer Learning with InceptionResnetV2 (Best model Found)
+    """
     def get_model(self, bs=32, img_w=256, img_h=256, num_classes=20):
         model = tf.keras.Sequential(name="INCRES")
         inception_resnet = tf.keras.applications.InceptionResNetV2(include_top=False, weights='imagenet',
@@ -262,6 +293,7 @@ class INCRES(object):
         _compile_model(model)
 
         return model
+
 
 def _compile_model(model):
     loss = tf.keras.losses.CategoricalCrossentropy()
