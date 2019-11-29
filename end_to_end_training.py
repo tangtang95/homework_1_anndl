@@ -1,6 +1,6 @@
 from src.data_management.data_reader import *
 from src.training.training_with_callbacks import *
-from src.model.models import INCRES
+from src.model.models import GAPBN
 import tensorflow as tf
 
 if __name__ == '__main__':
@@ -17,8 +17,7 @@ if __name__ == '__main__':
                                                                             img_w=img_w, to_rescale=True)
 
     # Model Creation
-    model = INCRES()
-    model = model.get_model(img_w=img_w, img_h=img_h)
+    model = GAPBN().get_model(img_w=img_w, img_h=img_h)
 
     # Model training
     exp_dir = os.path.join(root_path, "report")
